@@ -1,0 +1,22 @@
+復查決定書查詢系統 DDQS 系統更新封包
+
+檔案說明:
+
+  MailUpdate1說明.txt = 本檔案
+
+  MailUpdate1.exe = 更新 IIS ASP 案件管理 網頁程式用檔案組(自解壓縮檔)
+
+
+更新方法:
+
+  1.尋找IP為"10.14.244.4", 其電腦名稱為"SR24"之主機
+  
+  2.執行"MailUpdate1.exe"後解開兩個檔案, 將兩個檔案複製至該主機內之 "D:\WWW_ROOT\NTAK_DDQS\Exec\Manager\" 下
+
+  3.結束作業
+
+
+如果有任何使用方面的問題, 請洽:
+陳浩威
+Tel: +886-927-119471
+Email: howardchen@pie.com.tw

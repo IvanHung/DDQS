@@ -1,0 +1,229 @@
+<%@ Language=JavaScript %>
+<!--#include file="_lib.asp" -->
+<%
+  ReDBConnect();
+
+  var RetValue = '';
+  
+  if (!IsNull(Rcv.Item('_AD_LOGON')))
+    Rcv.SetItem('user_id', Rcv.Item('_LOGON_USER_ID'));
+  else
+    Response.Cookies(SysID + '_webap_userid') = Rcv.Item('user_id');
+
+  Session('user_name') = null;
+  Session('user_id') = null;
+  Session('user_rowguid') = null;
+  Session('user_role_id') = null;
+  Session('user_subrole_id_array') = null;
+  Session('user_unit') = null;
+  Session('user_unit_name') = null;
+  Session('user_email') = null;
+  Session('user_emplcd') = null;
+  Session('user_role_name') = null;
+
+  Session('is_deputy') = null;
+  Session('login_time') = null;
+  Session('visible_page') = null;
+  
+  Rcv.SetItem('user_id', Rcv.Item('user_id').toUpperCase());
+  Rcv.SetItem('user_password', Rcv.Item('user_password').toUpperCase());
+
+  function GetSubRoleIdArray(rowguid, default_role_id)
+  {
+    
+    var SubRoleIdArray = new Array();
+    var i = 0;
+    
+    SubRoleIdArray[i++] = ''+default_role_id;
+    
+    if (rowguid != null)
+    {
+      var Qry = SQLExecute("select * from webap_userroles where uroles_user_rowguid='" + rowguid + "'");
+      
+      while (!Qry.Eof)
+      {
+        SubRoleIdArray[i++] = ''+Qry('uroles_role_id');
+        Qry.moveNext;
+      }
+      Qry.Close;
+    }
+    
+    return SubRoleIdArray;
+  }
+  
+  var Qry;
+  
+  Qry = SQLExecute(
+      "select * from webap_user where user_enabled = 'Y' and UPPER(user_id) = '" + Rcv.Item('user_id') + "'");
+      
+  DBDataConn = Server.CreateObject("ADODB.Connection");
+
+  DBDataConn.ConnectionTimeout = 30;
+  DBDataConn.CommandTimeout = 120;
+  DBDataConn.CursorLocation = 3;
+
+  strConn = "Provider=SQLOLEDB; Data Source="+SysDBHost+";Initial Catalog="+SysDBDatabaseNameData+"; User Id="+SysDBUser+"; Password="+SysDBPassword;
+	
+  DBDataConn.ConnectionString = strConn;
+  DBDataConn.Open();
+
+  if (Qry.Eof)
+  {
+    if ((Rcv.Item('user_id').toUpperCase() == 'SYSTEM') && (Rcv.Item('user_password').toUpperCase() == 'MANAGER'))
+    {
+      Qry.Close;
+      var Qry = SQLExecute("select * from webap_user where user_role_id = '0'");
+      if (Qry.Eof)
+        Response.Redirect('sys_admin/do_login.asp?user_id=' + Rcv.Item('user_id') + '&user_password=' + Rcv.Item('user_password'));
+    }
+
+    Rcv.SetItem('user_id', Rcv.Item('user_id').substr(Rcv.Item('user_id').length-5, 5));
+    
+    Qry = DBDataConn.Execute("select * from QICT105 where EMPL_CD = '" + Rcv.Item('user_id') + "'");
+        
+    //if (!Qry.eof && Qry('ORG_SECTN') != 'E011C' && Qry('ORG_SECTN') != 'E011R' && Qry('ORG_SECTN') != 'E011E' && Qry('ORG_SECTN') != 'E011S' &&
+    //  Qry('ORG_SECTN') != 'E011H' && Qry('ORG_SECTN') != 'E011F' )
+    // RetValue = '您非審查一、二、三、四科、法務一、二科及綜合規劃科之人員，沒有使用權限。'
+    
+    if (Qry.eof) RetValue = 'EOL'
+    else
+    {
+      Session('user_name') = ''+Qry('EMPL_NM');
+      Session('user_unit') = ''+Qry('ORG_SECTN');
+      Session('user_unit_name') = GetSelectText("select dbo.GetDeptName('" + Session('user_unit') + "')");
+      Session('login_time') = ACDateToStr() + " " + ACTimeToStr();
+      Session('user_rowguid') = 'xxxxx';
+      Session('user_role_id') = GetSelectText("select user_role_id from webap_user where user_id = '" + Rcv.Item('user_id') + "'");
+      Session('user_subrole_id_array') = GetSubRoleIdArray(null, 2);
+      Session('user_id') = ''+Rcv.Item('user_id');
+      Session('user_emplcd') = Rcv.Item('user_id');
+      Session('user_role_name') = '';//ReplaceStrAll(GetSelectText("select dbo.GetSubRoles('" + Session('user_rowguid') + "', '" + Session('user_role_id') + "')"), '<br>', '/');
+
+      AppendLog("使用者登入 user_id:" + Session('user_id') + " user_name:" + Session('user_name'));
+
+      var Qry2 = SQLExecute(
+        "select * from webap_role where role_id='" + Session('user_role_id') + "' ");
+      var VisiblePages = new Array();
+      var i = 0;
+      while (!Qry2.Eof)
+      {
+        VisiblePages[i++] = ''+Qry2('role_page_filename');
+        Qry2.moveNext;
+      }
+      Qry2.Close;
+
+      Session('visible_page') = VisiblePages;
+    }
+  }
+  else if (Qry('user_role_id') == 0)
+    Response.Redirect('sys_admin/do_login.asp?user_id=' + Rcv.Item('user_id') + '&user_password=' + Rcv.Item('user_password'));
+  else
+  {
+    /*
+    ///// 測試登入
+    if (Rcv.Item('user_id') != 'E0101491')
+      ShowMessage('對不起, 現在系統執行測試中, 只允許特定人員操作系統. <br><br>請稍後再進入本系統.');
+    */
+    
+    if (Rcv.Item('super_debug') != 'true' && IsNull(Rcv.Item('_AD_LOGON')))
+        RetValue += '一般使用者請使用Windows認證機制自動登入本系統.';
+    else if (IsNull(Rcv.Item('_AD_LOGON')) && Qry('user_login_fail_count') >= 5)
+    {
+      var locktime = new Date(Qry('user_last_login_fail_time'));
+      locktime.setTime(locktime.getTime() + 1000*60*60);
+      var now = new Date();
+      if (now < locktime)
+      {
+        SQLExecute(
+          "update webap_user set " + 
+          "user_last_login_ip = '" + Request.ServerVariables('REMOTE_ADDR') + "', " +
+          "user_last_login_fail_time = getdate(), " +
+          "user_login_fail_count = user_login_fail_count + 1 " +
+          "where UPPER(user_id) = '" + Rcv.Item('user_id') + "'");
+        now.setTime(now.getTime() + 1000*60*60);
+        RetValue += '使用者密碼錯誤達五次以上, 使用者已被鎖定. 將於' + ACDateToStr(now) + ' ' + ACTimeToStr(now) + '解鎖.';
+        ///// AppendLog(RetValue + ' (LoginID:' + Rcv.Item('user_id') + ')');
+      }
+    }
+    
+    if (IsNull(RetValue))
+    {
+      if (IsNull(Rcv.Item('_AD_LOGON')) && (''+Qry('user_password')).toUpperCase() != ''+Rcv.Item('user_password'))
+      {
+        SQLExecute(
+          "update webap_user set " + 
+          "user_last_login_ip = '" + Request.ServerVariables('REMOTE_ADDR') + "', " +
+          "user_last_login_fail_time = getdate(), " +
+          "user_login_fail_count = user_login_fail_count + 1 " +
+          "where UPPER(user_id) = '" + Rcv.Item('user_id') + "'");
+        RetValue = '使用者密碼錯誤, 請重新登入.';
+        if (Qry('user_login_fail_count') < 4)
+          RetValue = RetValue + ' 您尚有' + (5-Qry('user_login_fail_count')) + '次重新登入機會.'
+        else
+          RetValue = RetValue + ' 您僅剩最後一次重新登入機會.'
+      }
+      else
+      {
+        SQLExecute(
+          "update webap_user set " + 
+          "user_last_login_ip = '" + Request.ServerVariables('REMOTE_ADDR') + "', " +
+          "user_last_login_success_time = getdate(), " +
+          "user_login_fail_count = 0 " +
+          "where UPPER(user_id) = '" + Rcv.Item('user_id') + "'");
+            
+        Session('user_name') = GetSelectText("select dbo.GetDeptEmpName('" + Rcv.Item('user_id') + "')");
+
+        Qry = DBDataConn.Execute("select ORG_SECTN from QICT105 where EMPL_CD='" + Rcv.Item('user_id').substr(3, 5) + "'");
+        Session('user_unit') = '' + Qry(0)
+        Qry.Close();
+
+        Session('user_unit_name') = GetSelectText("select dbo.GetDeptName('" + Session('user_unit') + "')");
+        Session('login_time') = ACDateToStr() + " " + ACTimeToStr();
+        Session('user_rowguid') = '' + Qry('rowguid');
+        Session('user_role_id') = '' + Qry('user_role_id');
+        Session('user_subrole_id_array') = GetSubRoleIdArray('' + Qry('rowguid'), '' + Qry('user_role_id'));
+        Session('user_id') = Rcv.Item('user_id');
+        Session('user_emplcd') = Rcv.Item('user_id').substr(3, 5);
+        Session('user_role_name') = ReplaceStrAll(GetSelectText("select dbo.GetSubRoles('" + Session('user_rowguid') + "', '" + Session('user_role_id') + "')"), '<br>', '/');
+
+        AppendLog("使用者登入 user_id:" + Session('user_id') + " user_name:" + Session('user_name'));
+
+        var Qry2 = SQLExecute(
+          "select * from webap_role where role_id='" + Qry('user_role_id') + "' ");
+        var VisiblePages = new Array();
+        var i = 0;
+        while (!Qry2.Eof)
+        {
+          VisiblePages[i++] = ''+Qry2('role_page_filename');
+          Qry2.moveNext;
+        }
+        Qry2.Close;
+        
+        Qry2 = SQLExecute(
+          "select * from webap_role, webap_userroles " + 
+          "where uroles_user_rowguid='" + Session('user_rowguid') + "' and role_id=uroles_role_id ");
+        while (!Qry2.Eof)
+        {
+          VisiblePages[i++] = ''+Qry2('role_page_filename');
+          Qry2.moveNext;
+        }
+        Qry2.Close;
+        Qry2 = null;
+        
+        Session('visible_page') = VisiblePages;
+      };
+    };
+  };
+      
+  Qry.Close;
+  Qry = null;
+  
+  if (IsNull(RetValue))
+  {
+    Session.Timeout = 240;
+    Response.Redirect('frame.asp?show_left_menu=true');
+  }
+  else
+    ErrorMsg(RetValue, new Array('重新登入', "parent.location.href='default.asp'"));
+%>
+CCCCCC

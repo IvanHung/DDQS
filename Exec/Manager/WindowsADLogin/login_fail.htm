@@ -1,0 +1,368 @@
+
+<html>
+<head>
+  <meta HTTP-EQUIV=Content-Language Content=zh-tw>
+  <meta HTTP-EQUIV=Content-Type Content='text/html; charset=big5'>
+<style>
+body
+{
+  background-color: white;
+  cursor: default;
+  font: 9pt "細明體";
+  margin: 0px
+}
+table
+{
+  font: 9pt "細明體";
+}
+.button
+{
+  background-color: royalblue;
+  color: white;
+  cursor: hand;
+  font: 9pt "細明體";
+  height: 20px;
+  text-align: center;
+  border: 1px outset aqua;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 1px;
+  padding-bottom: 1px
+}
+.rowbutton
+{
+  background-color: royalblue;
+  color: white;
+  cursor: hand;
+  font: 9pt "細明體";
+  height: 20px;
+  width: 45px;
+  text-align: center;
+  border: 1px outset aqua;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-top: 0px;
+  padding-bottom: 0px
+}
+.label
+{
+  color: black;
+  font: 10pt "細明體";
+  text-align: left;
+  text-decoration: none;
+}
+.text
+{
+  background-color: #FFFFA0;
+  color: black;
+  font: 9pt "細明體";
+  text-decoration: none;
+  border: 1px solid red
+}
+.requiretext
+{
+  background-color: #FFFFA0;
+  color: black;
+  font: 9pt "細明體";
+  text-decoration: none;
+  border: 1px solid red
+}
+.readonlytext
+{
+  background-color: white;
+  color: #000000;
+  font: 9pt "細明體";
+  text-decoration: none;
+  border: 1px solid #FFFFFF;
+  cursor:default;
+}
+.warningtext
+{
+  background-color: red;
+  color: white;
+  font: 9pt "細明體";
+  text-decoration: none;
+  height: 18px;
+  border-style:solid;
+  border-width:1;
+  border-color:yellow #800000 #800000 yellow;
+  cursor:hand;
+}
+.topbutton
+{
+  background-color: #FFFFFF;
+  color: black;
+  cursor: hand;
+  font: 9pt "細明體";
+  height: 17px;
+  text-align: center;
+  border: 1px outset white;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-top: 0px;
+  padding-bottom: 0px
+}
+a:hover
+{
+  color: blue;
+  text-decoration: none
+}
+a:active
+{
+  color: blue;
+  text-decoration: none
+}
+a:visited
+{
+  color: blue;
+  text-decoration: none
+}
+a:link
+{
+  color: blue;
+  text-decoration: none
+}
+a
+{
+  color: blue;
+  text-decoration: none
+}
+.bwbutton
+{
+  background-color: royalblue;
+  color: white;
+  cursor: hand;
+  font: 9pt "細明體";
+  height: 19px;
+  text-align: center;
+  border: 1px outset aqua;
+  margin-left: 1px;
+  margin-right: 1px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  font-weight: bold
+}
+.smallbutton
+{
+  background-color: tomato;
+  color: white;
+  cursor: hand;
+  font: 9pt "細明體";
+  height: 13pt;
+  text-align: center;
+  border: 1px solid moccasin;
+  margin-left: 1px;
+  margin-right: 1px;
+  margin-top: 2px;
+  margin-bottom: 5px;
+  padding-left: 2px;
+  padding-right: 2px;
+  padding-top: 0px;
+  padding-bottom: 0px
+}
+.pagetable
+{
+  background-color:EAEAFF;
+  color:black;
+  border-color:2020AF;
+  border-style:solid;
+  border-width:0;
+  font:9pt "細明體";
+  padding:0;
+}
+.pagetableHeader
+{
+  background-color:C0C0FF;
+  color:black;
+  border-color:E0E0FF;
+  border-style:solid;
+  border-width:2;
+  font:9pt "細明體";
+  padding:0;
+  height:10px;
+}
+.uitable
+{
+  border-style:solid;
+  border-width:1px;
+  border-color:black #808080 #808080 black;
+  color:black;
+  font:9pt "細明體";
+  padding:0;
+}
+.uitable TD
+{
+  border-style:solid;
+  border-width:1px;
+  border-color:white black black white;
+  font:9pt "細明體";
+  white-space:nowrap;
+  padding:0;
+}
+.uitable .header
+{
+  font:9pt "細明體";
+  color:black;
+  white-space:nowrap;
+  cursor:default;
+  height:20;
+  padding:2;
+}
+.uitable .editfield
+{
+  font:9pt "細明體";
+  color:black;
+  white-space:nowrap;
+  font-weight:normal;
+  cursor:default;
+  height:20;
+  padding:2;
+}
+.borwsetable
+{
+  background-color:EAF3FD;
+  border-style:solid;
+  border-width:1;
+  border-color:gray white white gray;
+  color:black;
+  font:9pt "細明體";
+  padding:0;
+}
+.borwsetable TD
+{
+  font:9pt "細明體";
+  border-style:solid;
+  border-width:1;
+  border-color:white black black white;
+  color:blue;
+  white-space:nowrap;
+  cursor:default;
+  height:24;
+  padding:0;
+}
+.borwsetable .header
+{
+  font:9pt "細明體";
+  border-style:solid;
+  border-width:1;
+  border-color:white black black white;
+  background-color:4374B0;
+  color:white;
+  white-space:nowrap;
+  font-weight:normal;
+  cursor:default;
+  height:24;
+  padding:0;
+}
+.printtable_Landscape
+{
+  font: bold 11pt "標楷體";
+  background-color: white;
+  border-style: solid;
+  border-width: 1;
+  border-color: black white white black;
+  color: black;
+  padding: 2;
+  width: 900px;
+  height: 660px;
+}
+.printtable_Landscape TD
+{
+  font: bold 11pt "標楷體";
+  border-style: solid;
+  border-width: 1;
+  border-color: white black black white;
+  color:black;
+  vertical-align: top;
+  text-align: left;
+  line-break: strict;
+  padding: 2;
+}
+.printtable_Protrait
+{
+  font: bold 11pt "標楷體";
+  background-color: white;
+  border-style: solid;
+  border-width: 1;
+  border-color: black white white black;
+  color: black;
+  padding: 2;
+  width: 660px;
+  height: 900px;
+}
+.printtable_Protrait TD
+{
+  font: bold 11pt "標楷體";
+  border-style: solid;
+  border-width: 1;
+  border-color: white black black white;
+  color: black;
+  vertical-align: top;
+  text-align: left;
+  line-break: strict;
+  padding: 2;
+}
+</style>
+<title>網站受理案件管理系統 - 錯誤訊息</title>
+</head>
+<body>
+<!-- CustomMessage() Begin -->
+<table border="0" class=pagetable cellpadding="1" cellspacing="1" width="100%">
+  
+<!-- ContentHeader() Begin -->
+  <tr id=_ContentHeader>
+    <td class=pagetableHeader align=center>
+網站受理案件管理系統<br><input type=button class=topbutton style="width:270px;" value="資料時間:93年01月29日 18:16:34 / 重新整理" onclick="location.reload()"> <input type=button class=topbutton style="width:60px;background-color:#A0FFA0;color:black;" value="列印本頁" onclick="window.print()"></td>
+  </tr>
+<tr style="height=20px;"> 
+  <td height="10" bgcolor="#3366CC"><font color="#FFFFFF">使用者資訊： 尚未登入</font></td>
+</tr>
+
+<script language="javascript">
+<!--
+  if (window.name == '_print')
+    _ContentHeader.style.display = "none";
+//--> 
+</script>
+<!-- ContentHeader() End -->
+  
+  <tr>
+    <td align="middle" nowrap valign="center">
+      <br>
+      <table border=3 cellpadding=2 cellspacing=5 width="80%" height="80%" bgcolor=white borderColor=#8080FF style="margin-bottom: 1px;" >
+        <tr>
+          <td align=center valign=center nowrap>
+            <p>
+            <table border="0" cellpadding="1" cellspacing="1" height="80%" width="80%">
+            <tr>
+              <td align="center" valign="center"><b><font style="font: 18pt 新細明體; background-color: red; color: black; height: 40px; width:200px;"><b>錯誤訊息</b></font><br><br><font color=red>使用者編號或是密碼錯誤, 請重新登入..</font></b><br><br><input class="button" type="button" value="重新登入" onClick="parent.location.href='default.asp'" id="btn0" name="btn0">
+<input class="button" type="button" value="手動登入" onClick="parent.location.href='../default.asp'" id="btn1" name="btn1">
+      <script language="javascript">
+      <!--
+         document.all.btn0.focus();
+      -->
+      </script>
+      
+          </tr>
+        </td>
+      </table>
+</td></tr></table></p></p></td></tr></table>
+<!-- CustomMessage() End -->
+</body>
+</html>

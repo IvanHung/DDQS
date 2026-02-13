@@ -1,0 +1,56 @@
+<STYLE type=text/css>
+.texts {COLOR: #000000; FONT-FAMILY: "細明體", "新細明體"; FONT-SIZE: 10pt; FONT-STYLE: normal; LINE-HEIGHT: 15pt; VERTICAL-ALIGN: middle}
+.text {COLOR: #000000; FONT-FAMILY: "細明體", "新細明體"; FONT-SIZE: 11pt; FONT-STYLE: normal; LINE-HEIGHT: 15pt; VERTICAL-ALIGN: middle}
+.textr {COLOR: #FF0000; FONT-FAMILY: "細明體", "新細明體"; FONT-SIZE: 11pt; FONT-STYLE: normal; LINE-HEIGHT: 15pt; VERTICAL-ALIGN: middle}
+A:link {COLOR: #0077ff}
+A:visited {COLOR: #0088ff}
+A:active {COLOR: #007799}
+A {
+		font-family: 細明體;
+		font-weight: normal;
+		color: #0000FF;
+		text-decoration: none;
+}
+A:HOVER {
+		font-family: 細明體;
+		font-weight: bold;
+		color: #800080;
+        text-decoration: underline;
+}
+</STYLE>
+<STYLE type=text/css>.dummy {}
+</STYLE>
+<HTML>
+<title>檔案上傳程式</title>
+<BODY>
+<div align="center">
+  <center>
+    
+<table border="0" width="600" height="204" cellspacing="0" cellpadding="0">
+  <tr>
+    <td colspan=3 bgcolor=000080 width="592">
+      <font color=FFFFFF>測驗題目上傳作業 </font></td>
+  </tr>
+  <tr>
+    <td align=center bgcolor=FFFFC8 width=180>【傳送檔案】<hr></td>
+    <td align=center bgcolor=FFFFC8 width=180>【<a href="Javascript:OnClick=history.back()">回上一頁</a>】<hr></td>
+    <td align=center bgcolor=FFFFC8 width=240>【<a href="default.asp">返回首頁</a>】<hr></td>
+  </tr>  
+  <tr>  
+    <td height="156"  width="360" colspan=2 bgcolor="#CCCCFF"><FORM ACTION="filesave.asp"  ENCTYPE="multipart/form-data" METHOD=POST>
+       <font class=texts>選擇檔案：<INPUT TYPE=file NAME="file1"></p>
+                         檔案簡要說明：<INPUT TYPE=TEXT NAME="content" size="30" maxlengh="50"><BR><br>
+       <INPUT TYPE=SUBMIT NAME=UPLOAD value=新增上傳></font>
+       </p> 
+       </FORM> 
+    </td>
+    <td bordercolor="#FFFFFF" bgcolor="#CCFF99" width="254">
+       <font class=text>　　請按『瀏覽...』將題目文字檔上傳。每傳送一次即新增一份檔案。</font>
+       <font class=textr>檔案說明文字請在25個中文字</font><font class=text>以內。</font>
+    </td>
+  </tr>
+</table>
+  </center>
+</div>
+</BODY></HTML>
+

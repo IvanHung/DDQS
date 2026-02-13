@@ -1,0 +1,212 @@
+unit WordFileConvertSrvSetMain;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, Buttons, SrvUtils;
+
+type
+  TfrmWordFileConvertSrvSetMain = class(TForm)
+    btnStart: TBitBtn;
+    btnStop: TBitBtn;
+    GroupBox1: TGroupBox;
+    edInputPath: TEdit;
+    Label1: TLabel;
+    Label2: TLabel;
+    btnInputPathBrowse: TBitBtn;
+    GroupBox2: TGroupBox;
+    Label3: TLabel;
+    Label4: TLabel;
+    edOutputPath: TEdit;
+    btnOutputPathBrowse: TBitBtn;
+    Label5: TLabel;
+    cbOutputFileFormat: TComboBox;
+    btnClose: TBitBtn;
+    cbInputFileExt: TComboBox;
+    cbOutputFileExt: TComboBox;
+    GroupBox3: TGroupBox;
+    cbDeleteInputFile: TCheckBox;
+    cbDebugMode: TCheckBox;
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure btnStartClick(Sender: TObject);
+    procedure btnStopClick(Sender: TObject);
+    procedure btnCloseClick(Sender: TObject);
+    procedure cbOutputFileFormatChange(Sender: TObject);
+    procedure btnInputPathBrowseClick(Sender: TObject);
+    procedure btnOutputPathBrowseClick(Sender: TObject);
+  private
+    FSrvUtl: TServiceUtility;
+    procedure ResetUI;
+    procedure SaveParams;
+  public
+  end;
+
+var
+  frmWordFileConvertSrvSetMain: TfrmWordFileConvertSrvSetMain;
+
+implementation
+
+{$R *.dfm}
+
+uses
+  ParamUtil, SelectDirDlg;
+
+const
+  wdFormatDocument = 0;
+  wdFormatTemplate = 1;
+  wdFormatText = 2;
+  wdFormatTextLineBreaks = 3;
+  wdFormatDOSText = 4;
+  wdFormatDOSTextLineBreaks = 5;
+  wdFormatRTF = 6;
+  wdFormatEncodedText = 7;
+  wdFormatUnicodeText = 7;
+  wdFormatHTML = 8;
+
+procedure TfrmWordFileConvertSrvSetMain.FormCreate(Sender: TObject);
+begin
+  ParamAccess.ApplicationID := 'WordConvertService';
+
+  edInputPath.Text := ParamAccess.Value['INPUT', 'PATH'];
+  cbInputFileExt.Text := ParamAccess.Value['INPUT', 'FILE_EXT'];
+
+  if cbInputFileExt.Text = '' then
+    cbInputFileExt.Text := '.doc';
+
+  edOutputPath.Text := ParamAccess.Value['OUTPUT', 'PATH'];
+  cbOutputFileExt.Text := ParamAccess.Value['OUTPUT', 'FILE_EXT'];
+  cbOutputFileFormat.ItemIndex := cbOutputFileFormat.Items.IndexOf(ParamAccess.Value['OUTPUT', 'FILE_FORMAT']);
+
+  if cbOutputFileExt.Text = '' then
+    cbOutputFileExt.Text := '.txt';
+
+  if cbOutputFileFormat.ItemIndex < 0 then
+  begin
+    cbOutputFileFormat.ItemIndex := wdFormatTextLineBreaks;
+    cbOutputFileFormatChange(nil);
+  end;
+
+  cbDeleteInputFile.Checked := ParamAccess.ValueAsBool['OPTIONS', 'DELETE_INPUT_FILE'];
+  cbDebugMode.Checked := ParamAccess.ValueAsBool['OPTIONS', 'DEBUG_MODE'];
+
+  FSrvUtl := TServiceUtility.Create('WordConvertService');
+
+  ResetUI;
+end;
+
+procedure TfrmWordFileConvertSrvSetMain.FormDestroy(Sender: TObject);
+begin
+  FSrvUtl.Free;
+end;
+
+procedure TfrmWordFileConvertSrvSetMain.ResetUI;
+begin
+  btnStop.Enabled := FSrvUtl.Installed and FSrvUtl.Active;
+  btnStart.Enabled := not btnStop.Enabled;
+
+  edInputPath.Enabled := btnStart.Enabled;
+  btnInputPathBrowse.Enabled := btnStart.Enabled;
+  cbInputFileExt.Enabled := btnStart.Enabled;
+
+  edOutputPath.Enabled := btnStart.Enabled;
+  btnOutputPathBrowse.Enabled := btnStart.Enabled;
+  cbOutputFileFormat.Enabled := btnStart.Enabled;
+  cbOutputFileExt.Enabled := btnStart.Enabled;
+
+  cbDeleteInputFile.Enabled := btnStart.Enabled;
+  cbDebugMode.Enabled := btnStart.Enabled;
+end;
+
+procedure TfrmWordFileConvertSrvSetMain.SaveParams;
+begin
+  ParamAccess.Value['INPUT', 'PATH'] := edInputPath.Text;
+  ParamAccess.Value['INPUT', 'FILE_EXT'] := cbInputFileExt.Text;
+
+  ParamAccess.Value['OUTPUT', 'PATH'] := edOutputPath.Text;
+  ParamAccess.Value['OUTPUT', 'FILE_EXT'] := cbOutputFileExt.Text;
+  ParamAccess.Value['OUTPUT', 'FILE_FORMAT'] := cbOutputFileFormat.Text;
+
+  ParamAccess.ValueAsBool['OPTIONS', 'DELETE_INPUT_FILE'] := cbDeleteInputFile.Checked;
+  ParamAccess.ValueAsBool['OPTIONS', 'DEBUG_MODE'] := cbDebugMode.Checked;
+end;
+
+procedure TfrmWordFileConvertSrvSetMain.btnStartClick(Sender: TObject);
+begin
+  SaveParams;
+
+  FSrvUtl.Stop;
+  FSrvUtl.Uninstall;
+
+  if not FSrvUtl.Installed then
+    FSrvUtl.Install('Word轉檔服務器', ExtractFilePath(ParamStr(0)) + 'WordFileConvertSrv.exe', True);
+
+  if FSrvUtl.Installed then
+    FSrvUtl.Start;
+
+  if not FSrvUtl.Active then
+    MessageDlg('啟動服務器失敗, 請檢視Active.log檔案.', mtInformation, [mbOK], 0);
+
+  ResetUI;
+end;
+
+procedure TfrmWordFileConvertSrvSetMain.btnStopClick(Sender: TObject);
+begin
+  if FSrvUtl.Active then
+    FSrvUtl.Stop;
+
+  if FSrvUtl.Installed then
+    if MessageDlg('請問您要一併移除服務器嗎?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+      FSrvUtl.Uninstall;
+
+  if FSrvUtl.Active then
+    MessageDlg('關閉服務器失敗, 請檢視Active.log檔案.', mtInformation, [mbOK], 0);
+
+  ResetUI;
+end;
+
+procedure TfrmWordFileConvertSrvSetMain.btnCloseClick(Sender: TObject);
+begin
+  SaveParams;
+  Close;
+end;
+
+procedure TfrmWordFileConvertSrvSetMain.cbOutputFileFormatChange(
+  Sender: TObject);
+begin
+  case cbOutputFileFormat.ItemIndex of
+    wdFormatDocument:
+      cbOutputFileExt.Text := '.doc';
+    wdFormatTemplate:
+      cbOutputFileExt.Text := '.dot';
+    wdFormatText:
+      cbOutputFileExt.Text := '.txt';
+    wdFormatTextLineBreaks:
+      cbOutputFileExt.Text := '.txt';
+    wdFormatDOSText:
+      cbOutputFileExt.Text := '.txt';
+    wdFormatDOSTextLineBreaks:
+      cbOutputFileExt.Text := '.txt';
+    wdFormatRTF:
+      cbOutputFileExt.Text := '.rtf';
+    wdFormatUnicodeText:
+      cbOutputFileExt.Text := '.txt';
+    wdFormatHTML:
+      cbOutputFileExt.Text := '.html';
+  end;
+end;
+
+procedure TfrmWordFileConvertSrvSetMain.btnInputPathBrowseClick(
+  Sender: TObject);
+begin
+  edInputPath.Text := SelectDir(edInputPath.Text);
+end;
+
+procedure TfrmWordFileConvertSrvSetMain.btnOutputPathBrowseClick(
+  Sender: TObject);
+begin
+  edOutputPath.Text := SelectDir(edOutputPath.Text);
+end;
+
+end.

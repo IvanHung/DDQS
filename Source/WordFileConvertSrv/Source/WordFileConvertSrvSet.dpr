@@ -1,0 +1,16 @@
+program WordFileConvertSrvSet;
+
+uses
+  Forms,
+  WordFileConvertSrvSetMain in 'WordFileConvertSrvSetMain.pas' {frmWordFileConvertSrvSetMain},
+  SrvUtils in 'SrvUtils.pas',
+  ParamUtil in 'ParamUtil.pas',
+  SelectDirDlg in 'SelectDirDlg.pas' {frmSelectDir};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.CreateForm(TfrmWordFileConvertSrvSetMain, frmWordFileConvertSrvSetMain);
+  Application.Run;
+end.

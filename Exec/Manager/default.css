@@ -1,0 +1,319 @@
+body
+{
+  background-color: white;
+  cursor: default;
+  font: 12pt "細明體";
+  margin: 0px
+}
+table
+{
+  font: 12pt "細明體";
+}
+.button
+{
+  background-color: royalblue;
+  color: white;
+  cursor: hand;
+  font: 12pt "細明體";
+  height: 24px;
+  text-align: center;
+  border: 1px outset aqua;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 1px;
+  padding-bottom: 1px
+}
+.rowbutton
+{
+  background-color: royalblue;
+  color: white;
+  cursor: hand;
+  font: 12pt "細明體";
+  height: 20px;
+  width: 45px;
+  text-align: center;
+  border: 1px outset aqua;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-top: 0px;
+  padding-bottom: 0px
+}
+.label
+{
+  color: black;
+  font: 12pt "細明體";
+  text-align: left;
+  text-decoration: none;
+}
+.text
+{
+  background-color: #FFFFA0;
+  color: black;
+  font: 12pt "細明體";
+  text-decoration: none;
+  border: 1px solid red
+}
+.requiretext
+{
+  background-color: #FFFFA0;
+  color: black;
+  font: 12pt "細明體";
+  text-decoration: none;
+  border: 1px solid red
+}
+.readonlytext
+{
+  background-color: white;
+  color: #000000;
+  font: 12pt "細明體";
+  text-decoration: none;
+  border: 1px solid #FFFFFF;
+  cursor:default;
+}
+.warningtext
+{
+  background-color: red;
+  color: white;
+  font: 12pt "細明體";
+  text-decoration: none;
+  height: 18px;
+  border-style:solid;
+  border-width:1;
+  border-color:yellow #800000 #800000 yellow;
+  cursor:hand;
+}
+.topbutton
+{
+  background-color: #FFFFFF;
+  color: black;
+  cursor: hand;
+  font: 12pt "細明體";
+  height: 22px;
+  text-align: center;
+  border: 1px outset white;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-top: 0px;
+  padding-bottom: 0px
+}
+a:hover
+{
+  color: blue;
+  text-decoration: none
+}
+a:active
+{
+  color: blue;
+  text-decoration: none
+}
+a:visited
+{
+  color: blue;
+  text-decoration: none
+}
+a:link
+{
+  color: blue;
+  text-decoration: none
+}
+a
+{
+  color: blue;
+  text-decoration: none
+}
+.bwbutton
+{
+  background-color: royalblue;
+  color: white;
+  cursor: hand;
+  font: 12pt "細明體";
+  height: 24px;
+  text-align: center;
+  border: 1px outset aqua;
+  margin-left: 1px;
+  margin-right: 1px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  font-weight: bold
+}
+.smallbutton
+{
+  background-color: tomato;
+  color: white;
+  cursor: hand;
+  font: 12pt "細明體";
+  height: 13pt;
+  text-align: center;
+  border: 1px solid moccasin;
+  margin-left: 1px;
+  margin-right: 1px;
+  margin-top: 2px;
+  margin-bottom: 5px;
+  padding-left: 2px;
+  padding-right: 2px;
+  padding-top: 0px;
+  padding-bottom: 0px
+}
+.pagetable
+{
+  background-color:EAEAFF;
+  color:black;
+  border-color:2020AF;
+  border-style:solid;
+  border-width:0;
+  font: 12pt "細明體";
+  padding:0;
+}
+.pagetableHeader
+{
+  background-color:C0C0FF;
+  color:black;
+  border-color:E0E0FF;
+  border-style:solid;
+  border-width:2;
+  font: 12pt "細明體";
+  padding:0;
+  height:10px;
+}
+.uitable
+{
+  border-style:solid;
+  border-width:1px;
+  border-color:black #808080 #808080 black;
+  color:black;
+  font: 12pt "細明體";
+  padding:0;
+}
+.uitable TD
+{
+  border-style:solid;
+  border-width:1px;
+  border-color:white black black white;
+  font: 12pt "細明體";
+  white-space:nowrap;
+  padding:0;
+}
+.uitable .header
+{
+  font: 12pt "細明體";
+  color:black;
+  white-space:nowrap;
+  cursor:default;
+  height:20;
+  padding:2;
+}
+.uitable .editfield
+{
+  font: 12pt "細明體";
+  color:black;
+  white-space:nowrap;
+  font-weight:normal;
+  cursor:default;
+  height:20;
+  padding:2;
+}
+.borwsetable
+{
+  background-color:EAF3FD;
+  border-style:solid;
+  border-width:1;
+  border-color:gray white white gray;
+  color:black;
+  font: 12pt "細明體";
+  padding:0;
+}
+.borwsetable TD
+{
+  font: 12pt "細明體";
+  border-style:solid;
+  border-width:1;
+  border-color:white black black white;
+  color:blue;
+  white-space:nowrap;
+  cursor:default;
+  height:24;
+  padding:0;
+}
+.borwsetable .header
+{
+  font: 12pt "細明體";
+  border-style:solid;
+  border-width:1;
+  border-color:white black black white;
+  background-color:4374B0;
+  color:white;
+  white-space:nowrap;
+  font-weight:normal;
+  cursor:default;
+  height:24;
+  padding:0;
+}
+.printtable_Landscape
+{
+  font: bold 11pt "標楷體";
+  background-color: white;
+  border-style: solid;
+  border-width: 1;
+  border-color: black white white black;
+  color: black;
+  padding: 2;
+  width: 900px;
+  height: 660px;
+}
+.printtable_Landscape TD
+{
+  font: bold 11pt "標楷體";
+  border-style: solid;
+  border-width: 1;
+  border-color: white black black white;
+  color:black;
+  vertical-align: top;
+  text-align: left;
+  line-break: strict;
+  padding: 2;
+}
+.printtable_Protrait
+{
+  font: bold 14pt "標楷體";
+  background-color: white;
+  border-style: solid;
+  border-width: 0;
+  border-color: black white white black;
+  color: black;
+  padding: 2;
+}
+.printtable_Protrait TD
+{
+  font: bold 14pt "標楷體";
+  border-style: solid;
+  border-width: 0;
+  border-color: white black black white;
+  color: black;
+  vertical-align: top;
+  text-align: left;
+  line-break: strict;
+  padding: 2;
+}
+.mail_td
+{
+  background-color: white;
+  border-style:solid;
+  border-width:1px;
+  border-color:#808080 black black #808080;
+}

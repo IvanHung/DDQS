@@ -1,0 +1,166 @@
+unit MSWordFileConvert;
+
+interface
+
+const
+  wdFormatDocument = 0;
+  wdFormatTemplate = 1;
+  wdFormatText = 2;
+  wdFormatTextLineBreaks = 3;
+  wdFormatDOSText = 4;
+  wdFormatDOSTextLineBreaks = 5;
+  wdFormatRTF = 6;
+  wdFormatUnicodeText = 7;
+  wdFormatHTML = 8;
+
+function FileExtToFileFormat(FileExt: string; FileFormatName: string = ''): Integer;
+
+procedure WordFileConvert(InputFileName, OutputFileName: string; DestFileFormat: Integer = wdFormatDocument;
+    DebugMode: Boolean = False);
+
+implementation
+
+uses Classes, SysUtils, ComObj, LogFunc;
+
+var
+  IsWordAppCreated: Boolean = False;
+  WordApp: Variant;
+  G_DebugMode: Boolean = False;
+
+function FileExtToFileFormat(FileExt: string; FileFormatName: string = ''): Integer;
+begin
+  Result := wdFormatDocument;
+
+  FileExt := Trim(FileExt);
+
+  if FileExt <> '' then
+  begin
+    if FileExt[1] = '.' then
+      Delete(FileExt, 1, 1);
+
+    if FileExt = 'doc' then
+      Result := wdFormatDocument
+    else if FileExt = 'dot' then
+      Result := wdFormatTemplate
+    else if FileExt = 'txt' then
+      Result := wdFormatTextLineBreaks
+    else if FileExt = 'rtf' then
+      Result := wdFormatRTF
+    else if (FileExt = 'html') or (FileExt = 'htm') then
+      Result := wdFormatHTML
+  end;
+
+  FileFormatName := Trim(FileFormatName);
+  
+  if FileFormatName <> '' then
+  begin
+    if FileFormatName = 'wdFormatDocument' then
+      Result := wdFormatDocument
+    else if FileFormatName = 'wdFormatTemplate' then
+      Result := wdFormatTemplate
+    else if FileFormatName = 'wdFormatText' then
+      Result := wdFormatText
+    else if FileFormatName = 'wdFormatTextLineBreaks' then
+      Result := wdFormatTextLineBreaks
+    else if FileFormatName = 'wdFormatDOSText' then
+      Result := wdFormatDOSText
+    else if FileFormatName = 'wdFormatDOSTextLineBreaks' then
+      Result := wdFormatDOSTextLineBreaks
+    else if FileFormatName = 'wdFormatRTF' then
+      Result := wdFormatRTF
+    else if FileFormatName = 'wdFormatEncodedText' then
+      Result := wdFormatEncodedText
+    else if FileFormatName = 'wdFormatUnicodeText' then
+      Result := wdFormatUnicodeText
+    else if FileFormatName = 'wdFormatHTML' then
+      Result := wdFormatHTML;
+  end;
+end;
+
+procedure CreateWordApp;
+begin
+  if not IsWordAppCreated then
+  begin
+    if G_DebugMode then
+      AppendRec('建立WordApp.');
+    IsWordAppCreated := True;
+
+    WordApp := CreateOleObject('word.application');
+    WordApp.Visible := False;
+  end;
+end;
+
+procedure ReleaseWordApp;
+begin
+  if IsWordAppCreated then
+  begin
+    if G_DebugMode then
+      AppendRec('關閉WordApp.');
+    try
+      WordApp.Quit;
+      IsWordAppCreated := False;
+    except
+    end;
+  end;
+end;
+
+procedure WordFileConvert(InputFileName, OutputFileName: string; DestFileFormat: Integer = wdFormatDocument;
+    DebugMode: Boolean = False);
+var
+  Document: Variant;
+  FileFormat: Integer;
+  LockComments: Boolean;
+  Password: string;
+  AddToRecentFiles: Boolean;
+  WritePassword: string;
+  ReadOnlyRecommended: Boolean;
+  EmbedTrueTypeFonts: Boolean;
+  SaveNativePictureFormat: Boolean;
+  SaveFormsData: Boolean;
+  SaveAsAOCELetter: Boolean;
+begin
+  G_DebugMode := DebugMode;
+  
+  CreateWordApp;
+
+  try
+    if G_DebugMode then
+      AppendRec('開啟Word文件 "' + InputFileName + '".');
+    Document := WordApp.Documents.Open(InputFileName);
+
+    try
+      FileFormat := DestFileFormat;
+      LockComments := True;
+      Password := '';
+      AddToRecentFiles := False;
+      WritePassword := '';
+      ReadOnlyRecommended := False;
+      EmbedTrueTypeFonts := False;
+      SaveNativePictureFormat := True;
+      SaveFormsData := False;
+      SaveAsAOCELetter := False;
+
+      if G_DebugMode then
+        AppendRec('儲存Word文件 "' + OutputFileName + '".');
+        
+      Document.SaveAs(OutputFileName, FileFormat, LockComments, Password, AddToRecentFiles,
+        WritePassword, ReadOnlyRecommended, EmbedTrueTypeFonts, SaveNativePictureFormat, SaveFormsData,
+        SaveAsAOCELetter);
+
+    finally
+      if G_DebugMode then
+        AppendRec('關閉Word文件.');
+      Document.Close;
+    end;
+  except
+    ReleaseWordApp;
+    raise;
+  end;
+end;
+
+initialization
+
+finalization
+  ReleaseWordApp;
+
+end.

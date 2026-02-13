@@ -1,0 +1,22 @@
+NTAK_DDQS Word轉檔服務器 安裝說明 與 注意事項
+
+目的
+  
+  依據 NTAK_DDQS 新增復查決定書之作業需求, 需要有能夠將Word(*.doc)文件檔轉為文字檔(*.txt)檔案格式之功能,
+  原實行此一方法之功能有
+  
+    1. 以 ASP 叫用 Word.Application
+        於 ASP 程式內以呼叫 ActiveX 方式載入 Word.Application
+        但是由於IIS權限問題與Word版本差異所導致的使用問題, 使得此一方式之作業成功率極低
+        
+    2. 以 另外一支獨立程式 叫用 Word.Application
+        以另外一支獨立程式呼叫 ActiveX 方式載入 Word.Application
+        此一方式可以迴避權限方面的問題, 並可達到較高的Word版本相容性
+        
+  又由於此為常態服務程式, 故將此一程式寫為服務器常駐於系統中以達成目的.
+  
+功能說明
+
+  此程式名稱為 "WordFileConvertSrv.exe", 功能項目與執行順序如下:
+  
+  1. 偵測同一目錄

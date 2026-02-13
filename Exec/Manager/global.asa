@@ -1,0 +1,12 @@
+<SCRIPT LANGUAGE=JavaScript RUNAT=Server>
+function Session_OnStart()
+{
+  Session('DBConn') = null;
+}
+
+function Session_OnEnd()
+{
+  Session('DBConn').Close;
+  Session('DBConn') = null;
+}
+</SCRIPT>
